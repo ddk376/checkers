@@ -9,19 +9,19 @@ class Piece
   attr_accessor :pos
 
   def initialize(king = false, board, color, pos)
-    raise 'Invalid color' unless [:white, :black].include?(color)
-    raise 'Invalid position' unless board.on_board?(pos)
     @king, @board, @color, @pos = king, board, color, pos
   end
 
   def perform_slide(new_pos)
-    self.pos = new_pos if !illegal_move(new_pos)
+    raise 'Invalid move' if illegal_move(new_pos)
+    self.pos = new_pos
   end
 
   def perform_jump(new_pos) #should remove the jumped piece from the Board
-      opponent_piece_pos = pos.add(new_pos.diff(pos))
-      self.pos = new_pos if !illegal_move(new_pos)   #update the piece to new_pos and set the jumped piece to nil
-      board[opponent_piece_pos] = nil             #pos to new_pos we need to get the difference
+    raise 'Invalid move' if illegal_move(new_pos)
+    opponent_piece_pos = pos.add(new_pos.diff(pos))
+    self.pos = new_pos    #update the piece to new_pos and set the jumped piece to nil
+    board[opponent_piece_pos] = nil             #pos to new_pos we need to get the difference
   end
 
   def illegal_move?(new_pos)
