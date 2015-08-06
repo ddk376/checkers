@@ -5,8 +5,8 @@ class Piece
     :white => [[-1,  1], [-1, -1]],
     :black => [[ 1,  1], [ 1, -1]]
   }
-  attr_reader :king, :color
-  attr_accessor :pos, :board
+  attr_reader  :color
+  attr_accessor :pos, :board, :king
 
   def initialize(king = false, board, color, pos)
     @king, @board, @color, @pos = king, board, color, pos
@@ -29,6 +29,29 @@ class Piece
     board[new_pos] = self
     board[opponent_piece_pos] = nil
     true
+  end
+
+  def perfom_moves!(move_sequence)  #sequence is an array of pos
+    begin
+      move_sequence.length
+      move = get_move
+      board.move(*convert(move)) if valid_move?(move)
+    rescue InvalidMoveError => e
+      system("clear")
+      board.render
+      print "\n"
+      puts e.message.colorize(:red)
+      return false
+    ensure
+      board.render
+    end
+    true
+  end
+
+  def valid_move_seq?
+    dboard = board.dup
+
+
   end
 
   def get_possible_moves(pos) # should return an array of moves that piece at pos can make
@@ -73,8 +96,12 @@ class Piece
   end
 
   def maybe_conquer?(new_pos)
+    new_pos2 = new_pos
+    if board.on_board(new_pos.add(new_pos.diff(pos)))
+      new_pos2 = new_pos.add(new_pos.diff(pos))
+    end
     obstructed?(new_pos) && board[new_pos].color != color &&
-       !obstructed?(new_pos.add(new_pos.diff(pos)))
+      !obstructed?(new_pos2)
   end
 
   def king?
@@ -82,7 +109,10 @@ class Piece
   end
 
   def maybe_promote
-    king? if
-      self.pos.last == (self.color == :white ? 0 : BOARD_SIZE - 1) #and if king is not already true?
+    if self.pos.first == (self.color == :white ? 0 : Board::BOARD_SIZE - 1) #and if king is not already true?
+      if !king
+        self.king = true
+      end
+    end
   end
 end

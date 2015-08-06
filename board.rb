@@ -25,7 +25,7 @@ class Board
 
   def move(start, end_pos)
     piece = self[start]
-    raise CheckerError.new( "There is no piece there") if piece.nil?
+    raise InvalidMoveError.new( "There is no piece there") if piece.nil?
     coord_difference = end_pos.diff(start)
     if piece.move_diffs.include?(coord_difference)
       piece.perform_slide(end_pos)
@@ -33,6 +33,7 @@ class Board
       piece.perform_jump(end_pos) if
         piece.move_diffs.include?(coord_difference.divide(2))
     end
+    piece.maybe_promote
     self
   end
 
@@ -51,7 +52,7 @@ class Board
   end
 
   def render
-    color = :default
+    color = :light_white
     puts "   #{("a".."h").to_a.join(" ")}"
     BOARD_SIZE.times do |row|
       print "#{BOARD_SIZE - row} "
@@ -66,7 +67,7 @@ class Board
   end
 
   def toggle_color(color)                    # UI purposes : in colorize gem :default comes
-    color == :default ? :white : :default    # out the default color of terminal and # white
+    color == :light_white ? :white : :light_white    # out the default color of terminal and # white
   end                                        # comes out grey
 
   def on_board(pos)
