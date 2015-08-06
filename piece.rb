@@ -1,11 +1,10 @@
+require_relative 'array_utility'
 require 'byebug'
 class Piece
-  CARDINAL_MOVE_DIRECTIONS = [
-    [-1,  1],
-    [ 1,  1],
-    [-1, -1],
-    [ 1, -1]
-  ]
+  MOVE_DIRECTIONS = {
+    :white => [[-1,  1], [-1, -1]],
+    :black => [[ 1,  1], [ 1, -1]]
+  }
   attr_reader :king, :color
   attr_accessor :pos, :board
 
@@ -15,9 +14,9 @@ class Piece
 
   def to_s
     if color == :white
-      self.king == true ? "\u2654" : "\u26AA"
+      king? ? "\u2654" : "\u26AA"
     else
-      self.king == true ? "\u265A" : "\u26AB"
+      king? ? "\u265A" : "\u26AB"
     end
   end
 
@@ -64,47 +63,24 @@ class Piece
        !obstructed?(new_pos.add(new_pos.diff(pos)))
   end
 
+  def king?
+    self.king
+  end
+
   def move_diffs  # returns the directions a piece could move in
-    CARDINAL_MOVE_DIRECTIONS
+    if !self.king?
+      if self.color == :white
+        MOVE_DIRECTIONS[:white]
+      else
+        MOVE_DIRECTIONS[:black]
+      end
+    else
+      MOVE_DIRECTIONS[:white] + MOVE_DIRECTIONS[:black]
+    end
   end
 
   def maybe_promote
-    self.king = true if
+    king? if
       self.pos.last == (self.color == :white ? 0 : BOARD_SIZE - 1) #and if king is not already true?
-  end
-end
-
-
-class Array
-  def add(array)
-    result = []
-    self.length.times do |idx|
-      result << self[idx] + array[idx]
-    end
-    result
-  end
-
-  def diff(array)
-    result = []
-    self.length.times do |idx|
-      result << self[idx] - array[idx]
-    end
-    result
-  end
-
-  def multiply(num)
-    result = []
-    self.length.times do |idx|
-      result << self[idx] * num
-    end
-    result
-  end
-
-  def divide(num)
-    result = []
-    self.length.times do |idx|
-      result << self[idx] / num
-    end
-    result
   end
 end
