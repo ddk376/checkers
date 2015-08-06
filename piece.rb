@@ -1,5 +1,5 @@
 class Piece
-  CARDINAL_DIRECTIONS = [
+  CARDINAL_MOVE_DIRECTIONS = [
     [-1,  1],
     [ 1,  1],
     [-1, -1],
@@ -27,7 +27,7 @@ class Piece
   end
 
   def move_diffs  # returns the directions a piece could move in
-  
+    CARDINAL_MOVE_DIRECTIONS
   end
 
   def maybe_promote
