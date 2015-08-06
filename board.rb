@@ -1,3 +1,5 @@
+require 'colorize'
+
 class Board
   BOARD_SIZE = 8
   attr_reader :grid
@@ -17,7 +19,13 @@ class Board
   end
 
   def populate_grid
-
+    color = :black
+    BOARD_SIZE.times do |row|
+      color = :white if row == BOARD_SIZE / 2
+      BOARD_SIZE.times do |col|
+        @grid[row][col] = Piece.new(false, self, color, [row, col]) if (col - row).even?
+      end
+    end
   end
 
   def render
