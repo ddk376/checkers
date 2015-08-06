@@ -1,10 +1,13 @@
 class Piece
+  attr_reader :king, :board, :color
+  attr_accessor :pos
 
-  def initialize
-
+  def initialize(king = false, board, color, pos)
+    @king, @board, @color, @pos = king, board, color, pos
   end
 
   def perform_slide
+    
   end
 
   def perform_jump #should remove the jumped piece from the Board
@@ -20,6 +23,6 @@ class Piece
   end
 
   def maybe_promote  #promote after each move which checks to see if a piece reached the back row
-    
+
   end
 end
