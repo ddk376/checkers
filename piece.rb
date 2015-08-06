@@ -23,19 +23,19 @@ class Piece
   end
 
   def illegal_move?(pos1, pos2)
-
+    moves(pos1).include?(pos2)
   end
 
   def moves(pos) # should return an array of moves that piece at pos can make
 
   end
 
-  def obstructed?
-
+  def obstructed?(new_pos)
+    !board[new_pos].nil?
   end
 
-  def maybe_conquer?
-
+  def maybe_conquer?(new_pos)
+    !board[new_pos].nil?  # color is not the same&& !board[new_pos].color
   end
 
   def move_diffs  # returns the directions a piece could move in
