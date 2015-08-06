@@ -33,14 +33,16 @@ class Piece
 
   def perfom_moves!(move_sequence)  #sequence is an array of pos
     begin
-      move_sequence.length
-      move = get_move
-      board.move(*convert(move)) if valid_move?(move)
+      move_sequence.length.times do |idx|
+        if !perform_slide(move_sequence[idx], move_sequence[idx + 1]) 
+        else
+          if !perform_jump(move_sequence[idx], move_sequence[idx + 1])
+            raise InvalidMoveError
+          end
+        end
+        break if idx == move_sequence - 2
+      end
     rescue InvalidMoveError => e
-      system("clear")
-      board.render
-      print "\n"
-      puts e.message.colorize(:red)
       return false
     ensure
       board.render
