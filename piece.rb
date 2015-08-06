@@ -23,10 +23,11 @@ class Piece
   end
 
   def illegal_move?(pos1, pos2)
-    moves(pos1).include?(pos2)
+    !moves(pos1).include?(pos2)
   end
 
   def moves(pos) # should return an array of moves that piece at pos can make
+    possible_moves = []
 
   end
 
