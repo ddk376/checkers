@@ -7,9 +7,9 @@ class Board
   BOARD_SIZE = 8
   attr_accessor :grid
 
-  def initialize
+  def initialize(fill_in = true)
     @grid = Array.new(BOARD_SIZE) { Array.new(BOARD_SIZE) }
-    populate_grid
+    populate_grid if fill_in
   end
 
   def [](pos)
@@ -70,6 +70,18 @@ class Board
 
   def on_board(pos)
     pos.all? {|coord| coord.between?(0, BOARD_SIZE - 1) }
+  end
+
+  def dup
+    dboard = Board.new(false)
+    all_pieces.each do |piece|
+      dboard[piece.pos] = Piece.new(piece.king, dboard, piece.color, piece.pos)
+    end
+    dboard
+  end
+
+  def all_pieces
+    grid.flatten.compact
   end
 end
 
