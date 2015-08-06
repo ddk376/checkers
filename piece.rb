@@ -19,16 +19,17 @@ class Piece
   end
 
   def perform_jump(new_pos) #should remove the jumped piece from the Board
-         #update the piece to new_pos and set the jumped piece to nil
-         #pos to new_pos we need to get the difference
+      opponent_piece_pos = pos.add(new_pos.diff(pos))
+      self.pos = new_pos if !illegal_move(new_pos)   #update the piece to new_pos and set the jumped piece to nil
+      board[opponent_piece_pos] = nil             #pos to new_pos we need to get the difference
   end
 
   def illegal_move?(new_pos)
-    !moves(pos).include?(new_pos)
+    !get_possible_moves(pos).include?(new_pos)
   end
 
-  def moves(pos) # should return an array of moves that piece at pos can make
-    possible_moves = []   
+  def get_possible_moves(pos) # should return an array of moves that piece at pos can make
+    possible_moves = []
     move_diffs.each do |card_dir|
       new_pos = pos.add(card_dir)
       possible_moves << new_pos if !obstructed?(new_pos)
