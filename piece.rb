@@ -28,8 +28,16 @@ class Piece
   end
 
   def moves(pos) # should return an array of moves that piece at pos can make
-    possible_moves = []   # should use move_diffs
-                          # and get
+    possible_moves = []   
+    move_diffs.each do |card_dir|
+      new_pos = pos.add(card_dir)
+      possible_moves << new_pos if !obstructed?(new_pos)
+      if maybe_conquer(new_pos)
+        new_pos = new_pos.add(card_dir)
+        possible_moves << new_pos if !obstructed?(new_pos)
+      end
+    end
+    possible_moves
   end
 
   def obstructed?(new_pos)
@@ -37,7 +45,7 @@ class Piece
   end
 
   def maybe_conquer?(new_pos)
-    !board[new_pos].nil?  # color is not the same&& !board[new_pos].color
+    !board[new_pos].nil?  && board[new_pos].color != color # color is not the same&& !board[new_pos].color
   end
 
   def move_diffs  # returns the directions a piece could move in
