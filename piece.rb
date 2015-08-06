@@ -12,14 +12,6 @@ class Piece
     @king, @board, @color, @pos = king, board, color, pos
   end
 
-  def to_s
-    if color == :white
-      king? ? "\u2654" : "\u26AA"
-    else
-      king? ? "\u265A" : "\u26AB"
-    end
-  end
-
   def perform_slide(new_pos)
     return false if illegal_move?(new_pos)
     board[self.pos] = nil
@@ -39,10 +31,6 @@ class Piece
     true
   end
 
-  def illegal_move?(new_pos)
-    !get_possible_moves(pos).include?(new_pos)
-  end
-
   def get_possible_moves(pos) # should return an array of moves that piece at pos can make
     possible_moves = []
     move_diffs.each do |card_dir|
@@ -56,6 +44,30 @@ class Piece
     possible_moves
   end
 
+  def move_diffs  # returns the directions a piece could move in
+    if !self.king?
+      if self.color == :white
+        MOVE_DIRECTIONS[:white]
+      else
+        MOVE_DIRECTIONS[:black]
+      end
+    else
+      MOVE_DIRECTIONS[:white] + MOVE_DIRECTIONS[:black]
+    end
+  end
+
+  def to_s
+    if color == :white
+      king? ? "\u2654" : "\u26AA"
+    else
+      king? ? "\u265A" : "\u26AB"
+    end
+  end
+
+  def illegal_move?(new_pos)
+    !get_possible_moves(pos).include?(new_pos)
+  end
+
   def obstructed?(new_pos)
     !board[new_pos].nil?
   end
@@ -67,18 +79,6 @@ class Piece
 
   def king?
     self.king
-  end
-
-  def move_diffs  # returns the directions a piece could move in
-    if !self.king?
-      if self.color == :white
-        MOVE_DIRECTIONS[:white]
-      else
-        MOVE_DIRECTIONS[:black]
-      end
-    else
-      MOVE_DIRECTIONS[:white] + MOVE_DIRECTIONS[:black]
-    end
   end
 
   def maybe_promote
