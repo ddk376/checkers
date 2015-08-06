@@ -1,3 +1,4 @@
+require 'byebug'
 class Piece
   CARDINAL_MOVE_DIRECTIONS = [
     [-1,  1],
@@ -5,14 +6,11 @@ class Piece
     [-1, -1],
     [ 1, -1]
   ]
-  attr_reader :king, :board, :color
-  attr_accessor :pos
+  attr_reader :king, :color
+  attr_accessor :pos, :board
 
   def initialize(king = false, board, color, pos)
-    @king = king
-    @board = board
-    @color = color
-    @pos = pos
+    @king, @board, @color, @pos = king, board, color, pos
   end
 
   def to_s
@@ -24,14 +22,19 @@ class Piece
   end
 
   def perform_slide(new_pos)
-    raise 'Invalid move' if illegal_move(new_pos)
+    raise 'Invalid move' if illegal_move?(new_pos)
+    board[self.pos] = nil
     self.pos = new_pos
+    board[new_pos] = self
   end
 
   def perform_jump(new_pos) #should remove the jumped piece from the Board
-    raise 'Invalid move' if illegal_move(new_pos)
-    opponent_piece_pos = pos.add(new_pos.diff(pos))
+    #debugger
+    raise 'Invalid move' if illegal_move?(new_pos)
+    board[self.pos] = nil
+    opponent_piece_pos = pos.add(new_pos.diff(pos).divide(2))
     self.pos = new_pos    #update the piece to new_pos and set the jumped piece to nil
+    board[new_pos] = self
     board[opponent_piece_pos] = nil             #pos to new_pos we need to get the difference
   end
 
@@ -44,7 +47,7 @@ class Piece
     move_diffs.each do |card_dir|
       new_pos = pos.add(card_dir)
       possible_moves << new_pos if !obstructed?(new_pos)
-      if maybe_conquer(new_pos)
+      if maybe_conquer?(new_pos)
         new_pos = new_pos.add(card_dir)
         possible_moves << new_pos if !obstructed?(new_pos)
       end
@@ -58,7 +61,7 @@ class Piece
 
   def maybe_conquer?(new_pos)
     obstructed?(new_pos) && board[new_pos].color != color && # color is not the same&& !board[new_pos].color
-       !obstructed(new_pos.add(new_pos.diff(pos)))
+       !obstructed?(new_pos.add(new_pos.diff(pos)))
   end
 
   def move_diffs  # returns the directions a piece could move in

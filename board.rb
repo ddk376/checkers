@@ -1,5 +1,7 @@
 require_relative 'piece'
+require_relative 'checker_error'
 require 'colorize'
+require 'byebug'
 
 class Board
   BOARD_SIZE = 8
@@ -21,7 +23,16 @@ class Board
   end
 
   def move(start, end_pos)
-
+    piece = self[start]
+    raise CheckerError.new( "There is no piece there") if piece.nil?
+    coord_difference = end_pos.diff(start)
+    if piece.move_diffs.include?(coord_difference)
+      piece.perform_slide(end_pos)
+    else
+      piece.perform_jump(end_pos) if
+        piece.move_diffs.include?(coord_difference.divide(2))
+    end
+    self
   end
 
   def populate_grid
@@ -40,11 +51,11 @@ class Board
 
   def render
     color = :default
-    puts "   #{("a".."h").to_a.join("  ")}"
+    puts "   #{("a".."h").to_a.join(" ")}"
     BOARD_SIZE.times do |row|
       print "#{BOARD_SIZE - row} "
       BOARD_SIZE.times do |col|
-        print " #{self[[row,col]].nil? ? " " : self[[row, col]].to_s } ".colorize(:background => color)
+        print "#{self[[row,col]].nil? ? " " : self[[row, col]].to_s } ".colorize(:background => color)
         color = switch_board_color(color)
       end
       color = switch_board_color(color)
