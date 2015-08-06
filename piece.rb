@@ -1,4 +1,10 @@
 class Piece
+  CARDINAL_DIRECTIONS = [
+    [-1,  1],
+    [ 1,  1],
+    [-1, -1],
+    [ 1, -1]
+  ]
   attr_reader :king, :board, :color
   attr_accessor :pos
 
@@ -21,18 +27,19 @@ class Piece
   end
 
   def move_diffs  # returns the directions a piece could move in
-
+  
   end
 
-  def maybe_promote  #promote after each move which checks to see if a piece reached the back row
-
+  def maybe_promote
+    self.king = true if
+      self.pos.last == (self.color == :white ? 0 : BOARD_SIZE - 1) #and if king is not already true?
   end
 
   def to_s
     if color == :white
-      king ? "" : "\u26AA"
+      king ? "\u2654" : "\u26AA"
     else
-      king ? "" : "\u26AB"
+      king ? "\u265A" : "\u26AB"
     end
   end
 end
