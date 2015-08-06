@@ -18,8 +18,9 @@ class Piece
     self.pos = new_pos if !illegal_move(new_pos)
   end
 
-  def perform_jump (new_pos) #should remove the jumped piece from the Board
-
+  def perform_jump(new_pos) #should remove the jumped piece from the Board
+         #update the piece to new_pos and set the jumped piece to nil
+         #pos to new_pos we need to get the difference
   end
 
   def illegal_move?(new_pos)
@@ -27,8 +28,8 @@ class Piece
   end
 
   def moves(pos) # should return an array of moves that piece at pos can make
-    possible_moves = []
-
+    possible_moves = []   # should use move_diffs
+                          # and get
   end
 
   def obstructed?(new_pos)
@@ -54,5 +55,23 @@ class Piece
     else
       king ? "\u265A" : "\u26AB"
     end
+  end
+end
+
+class Array
+  def add(array)
+    result = []
+    self.length.times do |idx|
+      result << self[idx] + array[idx]
+    end
+    result
+  end
+
+  def diff(array)
+    result = []
+    self.length.times do |idx|
+      result << self[idx] - array[idx]
+    end
+    result
   end
 end
