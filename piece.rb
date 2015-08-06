@@ -14,16 +14,16 @@ class Piece
     @king, @board, @color, @pos = king, board, color, pos
   end
 
-  def perform_slide(pos1, pos2)
+  def perform_slide(new_pos)
+    self.pos = new_pos if !illegal_move(new_pos)
+  end
+
+  def perform_jump (new_pos) #should remove the jumped piece from the Board
 
   end
 
-  def perform_jump (pos1, pos2) #should remove the jumped piece from the Board
-
-  end
-
-  def illegal_move?(pos1, pos2)
-    !moves(pos1).include?(pos2)
+  def illegal_move?(new_pos)
+    !moves(pos).include?(new_pos)
   end
 
   def moves(pos) # should return an array of moves that piece at pos can make
