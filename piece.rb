@@ -101,7 +101,7 @@ class Piece
   end
 
   def illegal_move?(new_pos)
-    !get_possible_moves(pos).include?(new_pos)
+    !get_possible_moves(pos).include?(new_pos) || !board.on_board(new_pos)
   end
 
   def obstructed?(new_pos)
