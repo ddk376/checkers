@@ -1,3 +1,0 @@
-class CheckerError < StandardError
-
-end

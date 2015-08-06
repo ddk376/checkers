@@ -1,5 +1,5 @@
 require_relative 'piece'
-require_relative 'checker_error'
+require_relative 'invalid_move_error'
 require_relative 'array_utility'
 require 'colorize'
 require 'byebug'
