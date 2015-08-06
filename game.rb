@@ -25,6 +25,7 @@ class Game
       print "\n"
       input = get_move
       move_sequence = get_move_sequence(input)
+      debugger
       board[move_sequence.first].perfom_moves(move_sequence)
     rescue InvalidMoveError => e
       system("clear")
@@ -52,12 +53,14 @@ class Game
   end
 
   def convert(pos)
-    row = pos[0]
-    col = pos[1]
+    pos_arr = pos.split("")
+    col = pos_arr[0]
+    row = pos_arr[1]
+
     row = Integer(row)
     col = String(col).downcase
 
-    new_row = BOARD_SIZE - row
+    new_row = Board::BOARD_SIZE - row
     new_col = col.ord - ORD_DELTA
     [new_row, new_col]
   end

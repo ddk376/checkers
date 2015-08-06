@@ -32,11 +32,13 @@ class Piece
   end
 
   def perform_moves(move_sequence)
-    if valid_move_seq?(move_sequence)
+    if self.valid_move_seq?(move_sequence)
       self.perform_moves!
     else
       raise InvalidMoveError
+      return false
     end
+    true
   end
 
   def perfom_moves!(move_sequence)  #sequence is an array of pos
@@ -55,7 +57,7 @@ class Piece
 
   def valid_move_seq?(move_sequence)
     dboard = board.dup
-    piece = dboard[[move_sequence.first]]
+    piece = dboard[[self.pos]]
     begin
        piece.perform_moves!(move_sequence)
     rescue InvalidMoveError => e
