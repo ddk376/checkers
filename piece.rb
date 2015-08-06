@@ -31,29 +31,40 @@ class Piece
     true
   end
 
+  def perform_moves(move_sequence)
+    if valid_move_seq?(move_sequence)
+      self.perform_moves!
+    else
+      raise InvalidMoveError
+    end
+  end
+
   def perfom_moves!(move_sequence)  #sequence is an array of pos
-    begin
-      move_sequence.length.times do |idx|
-        if !perform_slide(move_sequence[idx], move_sequence[idx + 1]) 
-        else
-          if !perform_jump(move_sequence[idx], move_sequence[idx + 1])
-            raise InvalidMoveError
-          end
+    move_sequence.length.times do |idx|
+      if !self.perform_slide(move_sequence[idx], move_sequence[idx + 1])
+      else
+        if !self.perform_jump(move_sequence[idx], move_sequence[idx + 1])
+          raise InvalidMoveError.new('Not valid sequence')
+          return false
         end
-        break if idx == move_sequence - 2
       end
+      break if idx == move_sequence - 2
+    end
+    true
+  end
+
+  def valid_move_seq?(move_sequence)
+    dboard = board.dup
+    piece = dboard[[move_sequence.first]]
+    begin
+       piece.perform_moves!(move_sequence)
     rescue InvalidMoveError => e
+      puts e.message.colorize(:red)
       return false
     ensure
       board.render
     end
     true
-  end
-
-  def valid_move_seq?
-    dboard = board.dup
-
-
   end
 
   def get_possible_moves(pos) # should return an array of moves that piece at pos can make
