@@ -57,17 +57,17 @@ class Board
       print "#{BOARD_SIZE - row} "
       BOARD_SIZE.times do |col|
         print "#{self[[row,col]].nil? ? " " : self[[row, col]].to_s } ".colorize(:background => color)
-        color = switch_board_color(color)
+        color = toggle_color(color)
       end
-      color = switch_board_color(color)
+      color = toggle_color(color)
       print "\n"
     end
     nil
   end
 
-  def switch_board_color(color)
-    color == :default ? :white : :default
-  end
+  def toggle_color(color)                    # UI purposes : in colorize gem :default comes
+    color == :default ? :white : :default    # out the default color of terminal and # white
+  end                                        # comes out grey
 
   def on_board(pos)
     pos.all? {|coord| coord.between?(0, BOARD_SIZE - 1) }

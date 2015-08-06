@@ -33,9 +33,9 @@ class Piece
     return false if illegal_move?(new_pos)
     board[self.pos] = nil
     opponent_piece_pos = pos.add(new_pos.diff(pos).divide(2))
-    self.pos = new_pos    #update the piece to new_pos and set the jumped piece to nil
+    self.pos = new_pos
     board[new_pos] = self
-    board[opponent_piece_pos] = nil             #pos to new_pos we need to get the difference
+    board[opponent_piece_pos] = nil
     true
   end
 
@@ -61,7 +61,7 @@ class Piece
   end
 
   def maybe_conquer?(new_pos)
-    obstructed?(new_pos) && board[new_pos].color != color && # color is not the same&& !board[new_pos].color
+    obstructed?(new_pos) && board[new_pos].color != color &&
        !obstructed?(new_pos.add(new_pos.diff(pos)))
   end
 
