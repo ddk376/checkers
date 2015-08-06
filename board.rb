@@ -3,6 +3,7 @@ class Board
   attr_reader :grid
 
   def initialize
+    @grid = Array.new(BOARD_SIZE) { Array.new(BOARD_SIZE) }
 
   end
 
