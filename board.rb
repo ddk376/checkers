@@ -18,11 +18,21 @@ class Board
 
   def populate_grid
 
-
   end
 
   def render
-
+    color = :default
+    puts "   #{("a".."h").to_a.join("  ")}"
+    BOARD_SIZE.times do |row|
+      print "#{BOARD_SIZE - row} "
+      BOARD_SIZE.times do |col|
+        print " #{self[[row,col]].nil? ? " " : self[[row,col]].to_s} ".colorize(:background => color)
+        color = switch_board_color(color)
+      end
+      color = switch_board_color(color)
+      print "\n"
+    end
+    nil
   end
 
   def on_board(pos)
