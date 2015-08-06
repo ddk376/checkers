@@ -21,20 +21,22 @@ class Piece
   end
 
   def perform_slide(new_pos)
-    raise 'Invalid move' if illegal_move?(new_pos)
+    return false if illegal_move?(new_pos)
     board[self.pos] = nil
     self.pos = new_pos
     board[new_pos] = self
+    true
   end
 
   def perform_jump(new_pos) #should remove the jumped piece from the Board
     #debugger
-    raise 'Invalid move' if illegal_move?(new_pos)
+    return false if illegal_move?(new_pos)
     board[self.pos] = nil
     opponent_piece_pos = pos.add(new_pos.diff(pos).divide(2))
     self.pos = new_pos    #update the piece to new_pos and set the jumped piece to nil
     board[new_pos] = self
     board[opponent_piece_pos] = nil             #pos to new_pos we need to get the difference
+    true
   end
 
   def illegal_move?(new_pos)
