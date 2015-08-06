@@ -9,7 +9,18 @@ class Piece
   attr_accessor :pos
 
   def initialize(king = false, board, color, pos)
-    @king, @board, @color, @pos = king, board, color, pos
+    @king = king
+    @board = board
+    @color = color
+    @pos = pos
+  end
+
+  def to_s
+    if color == :white
+      self.king == true ? "\u2654" : "\u26AA"
+    else
+      self.king == true ? "\u265A" : "\u26AB"
+    end
   end
 
   def perform_slide(new_pos)
@@ -46,7 +57,8 @@ class Piece
   end
 
   def maybe_conquer?(new_pos)
-    !board[new_pos].nil?  && board[new_pos].color != color # color is not the same&& !board[new_pos].color
+    obstructed?(new_pos) && board[new_pos].color != color && # color is not the same&& !board[new_pos].color
+       !obstructed(new_pos.add(new_pos.diff(pos)))
   end
 
   def move_diffs  # returns the directions a piece could move in
@@ -57,15 +69,8 @@ class Piece
     self.king = true if
       self.pos.last == (self.color == :white ? 0 : BOARD_SIZE - 1) #and if king is not already true?
   end
-
-  def to_s
-    if color == :white
-      king ? "\u2654" : "\u26AA"
-    else
-      king ? "\u265A" : "\u26AB"
-    end
-  end
 end
+
 
 class Array
   def add(array)

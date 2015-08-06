@@ -1,16 +1,18 @@
+require_relative 'piece'
 require 'colorize'
 
 class Board
   BOARD_SIZE = 8
-  attr_reader :grid
+  attr_accessor :grid
 
   def initialize
     @grid = Array.new(BOARD_SIZE) { Array.new(BOARD_SIZE) }
+    populate_grid
   end
 
   def [](pos)
     row, col = pos
-    @grid[row[col] = pos
+    @grid[row][col]
   end
 
   def []=(pos,value)
@@ -18,12 +20,20 @@ class Board
    @grid[row][col] = value
   end
 
+  def move(start, end_pos)
+
+  end
+
   def populate_grid
     color = :black
     BOARD_SIZE.times do |row|
-      color = :white if row == BOARD_SIZE / 2
+      color = :white if row == BOARD_SIZE / 2 - 1
       BOARD_SIZE.times do |col|
-        @grid[row][col] = Piece.new(false, self, color, [row, col]) if (col - row).even?
+         if row != 3 && row != 4
+           if(row.even? && col.even?) || (row.odd? && col.odd?)
+             self[[row, col]] = Piece.new(false, self, color, [row, col])
+           end
+         end
       end
     end
   end
@@ -34,7 +44,7 @@ class Board
     BOARD_SIZE.times do |row|
       print "#{BOARD_SIZE - row} "
       BOARD_SIZE.times do |col|
-        print " #{self[[row,col]].nil? ? " " : self[[row,col]].to_s} ".colorize(:background => color)
+        print " #{self[[row,col]].nil? ? " " : self[[row, col]].to_s } ".colorize(:background => color)
         color = switch_board_color(color)
       end
       color = switch_board_color(color)
@@ -43,8 +53,52 @@ class Board
     nil
   end
 
+  def switch_board_color(color)
+    color == :default ? :white : :default
+  end
+
   def on_board(pos)
     pos.all? {|coord| coord.between?(0, BOARD_SIZE - 1) }
   end
+end
 
+
+class Array
+  def add(array)
+    result = []
+    self.length.times do |idx|
+      result << self[idx] + array[idx]
+    end
+    result
+  end
+
+  def diff(array)
+    result = []
+    self.length.times do |idx|
+      result << self[idx] - array[idx]
+    end
+    result
+  end
+
+  def multiply(num)
+    result = []
+    self.length.times do |idx|
+      result << self[idx] * num
+    end
+    result
+  end
+
+  def divide(num)
+    result = []
+    self.length.times do |idx|
+      result << self[idx] / num
+    end
+    result
+  end
+end
+
+
+if __FILE__ == $PROGRAM_NAME
+  b = Board.new
+  b.render
 end
