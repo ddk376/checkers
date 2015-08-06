@@ -74,4 +74,20 @@ class Array
     end
     result
   end
+
+  def multiply(num)
+    result = []
+    self.length.times do |idx|
+      result << self[idx] * num
+    end
+    result
+  end
+
+  def divide(num)
+    result = []
+    self.length.times do |idx|
+      result << self[idx] / num
+    end
+    result
+  end
 end
