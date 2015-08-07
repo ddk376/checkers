@@ -31,26 +31,32 @@ class Piece
     true
   end
 
-  def perform_moves(move_sequence)
-    if self.valid_move_seq?(move_sequence)
-      self.perform_moves!
-    else
-      raise InvalidMoveError
-      return false
-    end
-    true
-  end
-
   def perfom_moves!(move_sequence)  #sequence is an array of pos
-    move_sequence.length.times do |idx|
-      if !self.perform_slide(move_sequence[idx], move_sequence[idx + 1])
-      else
-        if !self.perform_jump(move_sequence[idx], move_sequence[idx + 1])
-          raise InvalidMoveError.new('Not valid sequence')
-          return false
-        end
+    piece = board[move_sequence.first]
+    raise InvalidMoveError.new( "There is no piece there") if piece.nil?
+    coord_difference = end_pos.diff(start)
+    if piece.move_diffs.include?(coord_difference) && move_sequence.length == 2
+      if !piece.perform_slide(end_pos)
+         raise InvalidMoveError.new('Not valid sequence')
+         return false
       end
-      break if idx == move_sequence - 2
+      piece.maybe_promote
+    else 
+      move_sequence.length.times do |idx|
+        start= move_sequence[idx]
+        end_pos = move_sequence [idx + 1]
+        piece = board[start]
+        coord_difference = end_pos.diff(start)
+        if piece.move_diffs.include?(coord_difference.divide(2))
+          if !piece.perform_jump(end_pos)
+            raise InvalidMoveError.new('Not valid sequence')
+            return false
+          end
+        end
+        piece.maybe_promote
+        break if idx == length - 2
+        piece = board[move_sequence[idx + 1]]
+      end
     end
     true
   end

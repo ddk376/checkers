@@ -6,7 +6,7 @@ class Game
 
   def initialize
     @board = Board.new
-    @players = [:white, :black]
+    @players = [:black, :white]
   end
 
   def play
@@ -25,8 +25,8 @@ class Game
       print "\n"
       input = get_move
       move_sequence = get_move_sequence(input)
-      debugger
-      board[move_sequence.first].perfom_moves(move_sequence)
+      #debugger
+      board.perform_moves(move_sequence) if move_sequence.first.color == current_player
     rescue InvalidMoveError => e
       system("clear")
       board.render

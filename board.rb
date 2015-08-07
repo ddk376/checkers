@@ -23,19 +23,32 @@ class Board
    @grid[row][col] = value
   end
 
-  def move(start, end_pos)
-    piece = self[start]
+  # def move(start, end_pos)
+  #   piece = self[start]
+  #   raise InvalidMoveError.new( "There is no piece there") if piece.nil?
+  #   coord_difference = end_pos.diff(start)
+  #   if piece.move_diffs.include?(coord_difference)
+  #     piece.perform_slide(end_pos)
+  #   else
+  #     piece.perform_jump(end_pos) if
+  #       piece.move_diffs.include?(coord_difference.divide(2))
+  #   end
+  #   piece.maybe_promote
+  #   self
+  # end
+  
+  def perform_moves(move_sequence)
+    piece = move_sequence.first
     raise InvalidMoveError.new( "There is no piece there") if piece.nil?
-    coord_difference = end_pos.diff(start)
-    if piece.move_diffs.include?(coord_difference)
-      piece.perform_slide(end_pos)
+    if self[move_sequence.first].valid_move_seq?(move_sequence)
+      self[move_sequence.first].perform_moves!
     else
-      piece.perform_jump(end_pos) if
-        piece.move_diffs.include?(coord_difference.divide(2))
+      raise InvalidMoveError
+      return false
     end
-    piece.maybe_promote
-    self
+    true
   end
+
 
   def populate_grid
     color = :black
@@ -52,7 +65,7 @@ class Board
   end
 
   def render
-    color = :light_white
+    color = :default
     puts "   #{("a".."h").to_a.join(" ")}"
     BOARD_SIZE.times do |row|
       print "#{BOARD_SIZE - row} "
@@ -67,7 +80,7 @@ class Board
   end
 
   def toggle_color(color)                    # UI purposes : in colorize gem :default comes
-    color == :light_white ? :white : :light_white    # out the default color of terminal and # white
+    color == :default ? :white : :default    # out the default color of terminal and # white
   end                                        # comes out grey
 
   def on_board(pos)
